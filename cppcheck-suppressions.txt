@@ -1,0 +1,42 @@
+# cppcheck false positives - functions called via FreeRTOS task mechanism
+unusedFunction:Core/Src/app_tasks.c
+unusedFunction:Core/Src/main.c
+
+# cppcheck false positives - helper functions exported for unit testing
+staticFunction:Core/Src/bmp280.c
+staticFunction:Core/Src/main.c
+constParameterPointer:Core/Src/main.c
+
+# bmp280.c - justified deviations (Bosch datasheet algorithm) and false positives (missing SDK headers)
+misra-c2012-10.1:Core/Src/bmp280.c
+misra-c2012-10.4:Core/Src/bmp280.c
+misra-c2012-10.8:Core/Src/bmp280.c
+misra-c2012-12.1:Core/Src/bmp280.c
+misra-c2012-15.5:Core/Src/bmp280.c
+misra-c2012-17.3:Core/Src/bmp280.c
+misra-config:Core/Src/bmp280.c
+
+# app_tasks.c - justified deviations and false positives (missing SDK headers)
+misra-c2012-17.3:Core/Src/app_tasks.c
+misra-c2012-10.8:Core/Src/app_tasks.c
+misra-c2012-21.6:Core/Src/app_tasks.c
+
+# HAL-generated files - include guards use reserved identifiers, cannot be changed
+misra-c2012-21.1:Core/Inc/i2c.h
+misra-c2012-21.1:Core/Inc/usart.h
+misra-c2012-21.1:Core/Inc/main.h
+
+# main.c - HAL-generated callbacks and HAL API limitations
+misra-c2012-8.4:Core/Src/main.c
+misra-c2012-11.8:Core/Src/main.c
+misra-c2012-17.3:Core/Src/main.c
+misra-c2012-2.7:Core/Src/main.c
+misra-config:Core/Src/main.c
+
+# HAL-generated header files - include guards and unused pin defines
+misra-c2012-21.1:Core/Inc/gpio.h
+misra-c2012-2.5:Core/Inc/main.h
+misra-c2012-2.5:Core/Inc/bmp280.h
+
+# app_tasks.c - functions exported via header for FreeRTOS task registration
+misra-c2012-8.7:Core/Src/app_tasks.c

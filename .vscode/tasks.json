@@ -1,0 +1,27 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Tests",
+            "type": "shell",
+            "command": "cmake -B tests/build -S tests && cmake --build tests/build",
+            "group": "build",
+            "presentation": { "reveal": "always" }
+        },
+        {
+            "label": "Run Tests",
+            "type": "shell",
+            "command": "cd tests/build && ctest --output-on-failure --output-junit test-results.xml",
+            "group": "test",
+            "dependsOn": "Build Tests",
+            "presentation": { "reveal": "always" }
+        },
+        {
+            "label": "Run cppcheck",
+            "type": "shell",
+            "command": "cppcheck --enable=warning,style,performance,portability --error-exitcode=1 --suppressions-list=cppcheck-suppressions.txt -I Core/Inc Core/Src/bmp280.c Core/Src/app_tasks.c Core/Src/main.c",
+            "group": "test",
+            "presentation": { "reveal": "always" }
+        }
+    ]
+}

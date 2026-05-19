@@ -2,12 +2,13 @@
 .git/
 
 # OS files
-.DS_Store
+**/.DS_Store
 Thumbs.db
 
 # IDE / local workspace settings
 .settings/
-.vscode/
+.vscode/*.log
+.vscode/ipch/
 
 # STM32CubeIDE / Eclipse local metadata
 .cproject
@@ -15,7 +16,7 @@ Thumbs.db
 .mxproject
 
 # CMake local/generated files
-build/
+**/build/
 cmake-build-*/
 CMakeFiles/
 CMakeCache.txt
@@ -51,3 +52,4 @@ out/
 *.tmp
 *.bak
 *.swp
+*.dump
