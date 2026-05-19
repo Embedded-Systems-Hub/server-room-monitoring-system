@@ -4,16 +4,16 @@
 #include "stm32f4xx_hal.h"
 #include <stdint.h>
 
-#define BMP280_I2C_ADDR     (0x77 << 1)
+#define BMP280_I2C_ADDR     (0x77U << 1)
 #define BMP280_REG_ID       0xD0
 #define BMP280_REG_RESET    0xE0
 #define BMP280_REG_CTRL     0xF4
 #define BMP280_REG_CALIB    0x88
 #define BMP280_REG_TEMP_MSB 0xFA
 /* ctrl_meas register fields */
-#define BMP280_OSRS_T_x1    (0x01 << 5)   /* temp oversampling x1  */
-#define BMP280_OSRS_P_x1    (0x01 << 2)   /* press oversampling x1 */
-#define BMP280_MODE_NORMAL  (0x03 << 0)   /* normal mode           */
+#define BMP280_OSRS_T_x1    (0x01U << 5)   /* temp oversampling x1  */
+#define BMP280_OSRS_P_x1    (0x01U << 2)   /* press oversampling x1 */
+#define BMP280_MODE_NORMAL  (0x03U << 0)   /* normal mode           */
 
 typedef struct {
     uint16_t dig_T1;

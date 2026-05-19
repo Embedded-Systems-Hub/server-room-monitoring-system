@@ -34,9 +34,9 @@ HAL_StatusTypeDef BMP280_ReadTemperature(I2C_HandleTypeDef *hi2c, const BMP280_C
 }
 
 void BMP280_ParseCalibration(const uint8_t *buf, BMP280_CalibData *calib) {
-    calib->dig_T1 = (uint16_t)(buf[1] << 8 | buf[0]);
-    calib->dig_T2 = (int16_t) (buf[3] << 8 | buf[2]);
-    calib->dig_T3 = (int16_t) (buf[5] << 8 | buf[4]);
+    calib->dig_T1 = (uint16_t)((buf[1] << 8U) | buf[0]);
+    calib->dig_T2 = (int16_t) ((buf[3] << 8U) | buf[2]);
+    calib->dig_T3 = (int16_t) ((buf[5] << 8U) | buf[4]);
 }
 
 int32_t BMP280_CompensateTemp(const BMP280_CalibData *calib, int32_t adc_T) {
