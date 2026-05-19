@@ -1,0 +1,53 @@
+# Git internals
+.git/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / local workspace settings
+.settings/
+.vscode/
+
+# STM32CubeIDE / Eclipse local metadata
+.cproject
+.project
+.mxproject
+
+# CMake local/generated files
+build/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+CMakeUserPresets.json
+
+# Build outputs
+Debug/
+Release/
+out/
+
+# Firmware binaries / generated artifacts
+*.elf
+*.bin
+*.hex
+*.map
+*.list
+*.lst
+*.su
+
+# Object / dependency / library files
+*.o
+*.obj
+*.d
+*.a
+*.so
+*.dll
+*.exe
+
+# Logs / temporary files
+*.log
+*.tmp
+*.bak
+*.swp
