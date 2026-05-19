@@ -25,9 +25,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <string.h>
-#include <stdio.h>
 #include "bmp280.h"
+#include "app_tasks.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -37,7 +36,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define TEMP_ALERT_THRESHOLD_x100  3000   /* 30.00 °C */
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -48,7 +46,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-static BMP280_CalibData bmp280_calib;
+BMP280_CalibData bmp280_calib;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -118,21 +116,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    int32_t temp_x100 = 0;
-    BMP280_ReadTemperature(&hi2c1, &bmp280_calib, &temp_x100);
-
-    char msg[64];
-    snprintf(msg, sizeof(msg), "[TEMP] %ld.%02ld C\r\n",
-            temp_x100 / 100, temp_x100 % 100);
-    HAL_UART_Transmit(&huart2, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
-
-    if (temp_x100 >= TEMP_ALERT_THRESHOLD_x100) {
-        HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-    } else {
-        HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-    }
-
-    HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
