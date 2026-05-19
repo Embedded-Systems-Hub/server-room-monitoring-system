@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "feat/**"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  firmware:
+    name: Build Firmware
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          load: true
+          tags: build-env:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build firmware
+        run: |
+          docker run --rm -v "$PWD":/workspace -w /workspace build-env \
+            cmake --preset Debug
+          docker run --rm -v "$PWD":/workspace -w /workspace build-env \
+            cmake --build --preset Debug
+
+  tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          load: true
+          tags: build-env:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and run tests
+        run: |
+          docker run --rm -v "$PWD":/workspace -w /workspace build-env bash -c \
+            "cmake -G Ninja -B tests/build -S tests \
+             && cmake --build tests/build \
+             && cd tests/build && ctest --output-junit test-results.xml"
+          sudo chown -R "$USER" tests/build
+
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: tests/build/test-results.xml
+
+  static-analysis:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          load: true
+          tags: build-env:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run cppcheck with MISRA
+        run: |
+          docker run --rm -v "$PWD":/workspace -w /workspace build-env \
+            cppcheck --enable=warning,style,performance,portability \
+              --addon=misra \
+              --error-exitcode=1 \
+              --suppressions-list=cppcheck-suppressions.txt \
+              -I Core/Inc \
+              Core/Src/bmp280.c Core/Src/app_tasks.c Core/Src/main.c
