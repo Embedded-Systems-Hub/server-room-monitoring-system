@@ -24,5 +24,7 @@ typedef struct {
 HAL_StatusTypeDef BMP280_Init(I2C_HandleTypeDef *hi2c);
 HAL_StatusTypeDef BMP280_ReadCalibration(I2C_HandleTypeDef *hi2c, BMP280_CalibData *calib);
 HAL_StatusTypeDef BMP280_ReadTemperature(I2C_HandleTypeDef *hi2c, const BMP280_CalibData *calib, int32_t *temp_x100);
+void BMP280_ParseCalibration(const uint8_t *buf, BMP280_CalibData *calib);
+int32_t BMP280_CompensateTemp(const BMP280_CalibData *calib, int32_t adc_T);
 
 #endif /* BMP280_H */

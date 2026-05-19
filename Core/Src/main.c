@@ -25,6 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <string.h>
 #include "bmp280.h"
 #include "app_tasks.h"
 /* USER CODE END Includes */

@@ -15,11 +15,7 @@ HAL_StatusTypeDef BMP280_ReadCalibration(I2C_HandleTypeDef *hi2c, BMP280_CalibDa
     if (ret != HAL_OK) {
         return ret;
     }
-
-    calib->dig_T1 = (uint16_t)(buf[1] << 8 | buf[0]);
-    calib->dig_T2 = (int16_t) (buf[3] << 8 | buf[2]);
-    calib->dig_T3 = (int16_t) (buf[5] << 8 | buf[4]);
-
+    BMP280_ParseCalibration(buf, calib);
     return HAL_OK;
 }
 
@@ -33,14 +29,22 @@ HAL_StatusTypeDef BMP280_ReadTemperature(I2C_HandleTypeDef *hi2c, const BMP280_C
     }
 
     int32_t adc_T = ((int32_t)buf[0] << 12) | ((int32_t)buf[1] << 4) | (buf[2] >> 4);
+    *temp_x100 = BMP280_CompensateTemp(calib, adc_T);
+    return HAL_OK;
+}
 
+void BMP280_ParseCalibration(const uint8_t *buf, BMP280_CalibData *calib) {
+    calib->dig_T1 = (uint16_t)(buf[1] << 8 | buf[0]);
+    calib->dig_T2 = (int16_t) (buf[3] << 8 | buf[2]);
+    calib->dig_T3 = (int16_t) (buf[5] << 8 | buf[4]);
+}
+
+int32_t BMP280_CompensateTemp(const BMP280_CalibData *calib, int32_t adc_T) {
     int32_t var1 = ((adc_T >> 3) - ((int32_t)calib->dig_T1 << 1));
     var1 = (var1 * (int32_t)calib->dig_T2) >> 11;
 
     int32_t var2 = ((adc_T >> 4) - (int32_t)calib->dig_T1);
     var2 = (((var2 * var2) >> 12) * (int32_t)calib->dig_T3) >> 14;
 
-    *temp_x100 = ((var1 + var2) * 5 + 128) >> 8;
-
-    return HAL_OK;
+    return ((var1 + var2) * 5 + 128) >> 8;
 }
