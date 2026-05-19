@@ -19,15 +19,15 @@ jobs:
         with:
           context: .
           load: true
-          tags: build-env:latest
+          tags: stm32-monitor-build:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Build firmware
         run: |
-          docker run --rm -v "$PWD":/workspace -w /workspace build-env \
+          docker run --rm -v "$PWD":/workspace -w /workspace stm32-monitor-build \
             cmake --preset Debug
-          docker run --rm -v "$PWD":/workspace -w /workspace build-env \
+          docker run --rm -v "$PWD":/workspace -w /workspace stm32-monitor-build \
             cmake --build --preset Debug
 
   tests:
@@ -48,13 +48,13 @@ jobs:
         with:
           context: .
           load: true
-          tags: build-env:latest
+          tags: stm32-monitor-build:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Build and run tests
         run: |
-          docker run --rm -v "$PWD":/workspace -w /workspace build-env bash -c \
+          docker run --rm -v "$PWD":/workspace -w /workspace stm32-monitor-build bash -c \
             "cmake -G Ninja -B tests/build -S tests \
              && cmake --build tests/build \
              && cd tests/build && ctest --output-junit test-results.xml"
@@ -78,13 +78,13 @@ jobs:
         with:
           context: .
           load: true
-          tags: build-env:latest
+          tags: stm32-monitor-build:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Run cppcheck with MISRA
         run: |
-          docker run --rm -v "$PWD":/workspace -w /workspace build-env \
+          docker run --rm -v "$PWD":/workspace -w /workspace stm32-monitor-build \
             cppcheck --enable=warning,style,performance,portability \
               --addon=misra \
               --error-exitcode=1 \
