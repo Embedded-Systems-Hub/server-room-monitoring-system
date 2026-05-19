@@ -1,0 +1,5 @@
+unusedFunction:Core/Src/app_tasks.c
+unusedFunction:Core/Src/main.c
+staticFunction:Core/Src/bmp280.c
+staticFunction:Core/Src/main.c
+constParameterPointer:Core/Src/main.c

@@ -27,7 +27,7 @@ void LoggerTask(void *argument) {
         osMessageQueueGet(temp_queue, &temp_x100, NULL, osWaitForever);
 
         snprintf(msg, sizeof(msg), "[TEMP] %ld.%02ld C\r\n",
-                 temp_x100 / 100, temp_x100 % 100);
+                (long)(temp_x100 / 100), (long)(temp_x100 % 100));
         HAL_UART_Transmit(&huart2, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
 
         if (temp_x100 >= TEMP_ALERT_THRESHOLD_x100) {

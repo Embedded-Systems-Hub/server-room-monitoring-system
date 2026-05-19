@@ -15,6 +15,13 @@
             "group": "test",
             "dependsOn": "Build Tests",
             "presentation": { "reveal": "always" }
+        },
+        {
+            "label": "Run cppcheck",
+            "type": "shell",
+            "command": "cppcheck --enable=warning,style,performance,portability --error-exitcode=1 --suppressions-list=cppcheck-suppressions.txt -I Core/Inc Core/Src/bmp280.c Core/Src/app_tasks.c Core/Src/main.c",
+            "group": "test",
+            "presentation": { "reveal": "always" }
         }
     ]
 }
