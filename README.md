@@ -14,6 +14,8 @@ second and triggers a threshold alert when the temperature exceeds a configurabl
 - Activates an **alert LED** when temperature exceeds 30 °C.
 - Runs sensor acquisition and logging as independent **FreeRTOS tasks** communicating via a message queue.
 
+> **Development guide:** [guide.md](guide.md) walks through every milestone and explains the reasoning behind each decision, including interview angles for each topic.
+
 | Hardware setup | Serial output |
 |:---:|:---:|
 | ![Hardware setup](Docs/images/hardware-setup.png) | ![Serial output](Docs/images/serial-output.png) |
