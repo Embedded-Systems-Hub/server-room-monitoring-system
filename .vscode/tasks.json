@@ -2,26 +2,57 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build Tests",
+            "label": "Docker: Build Toolchain",
             "type": "shell",
-            "command": "cmake -B tests/build -S tests && cmake --build tests/build",
+            "command": "docker build -t server-room-monitoring-system .",
             "group": "build",
-            "presentation": { "reveal": "always" }
+            "presentation": { "reveal": "always", "panel": "shared" }
         },
         {
-            "label": "Run Tests",
+            "label": "Docker: Compile",
             "type": "shell",
-            "command": "cd tests/build && ctest --output-on-failure --output-junit test-results.xml",
-            "group": "test",
-            "dependsOn": "Build Tests",
-            "presentation": { "reveal": "always" }
+            "command": "docker run --rm -v \"${workspaceFolder}\":/workspace server-room-monitoring-system sh -c \"cmake --preset Debug && cmake --build --preset Debug\"",
+            "group": { "kind": "build", "isDefault": true },
+            "dependsOn": "Docker: Build Toolchain",
+            "presentation": { "reveal": "always", "panel": "shared" }
         },
         {
-            "label": "Run cppcheck",
+            "label": "Flash",
             "type": "shell",
-            "command": "cppcheck --enable=warning,style,performance,portability --error-exitcode=1 --suppressions-list=cppcheck-suppressions.txt -I Core/Inc Core/Src/bmp280.c Core/Src/app_tasks.c Core/Src/main.c",
-            "group": "test",
-            "presentation": { "reveal": "always" }
+            "command": "openocd -f interface/stlink.cfg -f target/stm32f4x.cfg -c \"program build/Debug/server-room-monitoring-system.elf verify reset exit\"",
+            "group": "build",
+            "dependsOn": "Docker: Compile",
+            "presentation": { "reveal": "always", "panel": "shared" }
+        },
+        {
+            "label": "Debug",
+            "type": "shell",
+            "command": "openocd -f interface/stlink.cfg -f target/stm32f4x.cfg",
+            "group": "build",
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": { "regexp": "^$" },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Open On-Chip Debugger",
+                    "endsPattern": "Listening on port 3333"
+                }
+            },
+            "presentation": { "reveal": "always", "panel": "shared" }
+        },
+        {
+            "label": "Docker: Clean",
+            "type": "shell",
+            "command": "docker run --rm -v \"${workspaceFolder}\":/workspace server-room-monitoring-system sh -c \"cmake --build --preset Debug --target clean\"",
+            "group": "build",
+            "presentation": { "reveal": "always", "panel": "shared" }
+        },
+        {
+            "label": "Docker: Test",
+            "type": "shell",
+            "command": "docker run --rm -v \"${workspaceFolder}\":/workspace server-room-monitoring-system sh -c \"cmake -B tests/build -S tests && cmake --build tests/build && cd tests/build && ctest --output-on-failure\"",
+            "group": { "kind": "test", "isDefault": true },
+            "presentation": { "reveal": "always", "panel": "shared" }
         }
     ]
 }
